@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TicTacToe</title>
+    <script type="text/javascript" src="./script.js"></script>
+  </head>
+  <body>
+    <div id="wrapper"></div>
+    <script type="text/javascript">
+      // Test cases
+      //--------------------------
+
+      // Draw match
+      const boardDraw = [
+        ["X", "O", "X"],
+        ["O", "X", "O"],
+        ["O", "X", "O"],
+      ];
+      // X wins
+      const boardXWins = [
+        ["X", "O", "X"],
+        ["O", "X", "O"],
+        ["O", "X", "X"],
+      ];
+      // O wins
+      const boardOWins = [
+        ["X", "O", "X"],
+        ["O", "O", "O"],
+        ["O", "X", "X"],
+      ];
+      // No winner
+      const boardNoWinner = [
+        ["X", "O", null],
+        [null, "X", "O"],
+        [null, null, "O"],
+      ];
+      // Horizontal Win
+      const boardWinHorizontal = [
+        ["O", "O", "X"],
+        ["X", "O", null],
+        ["X", "X", "X"],
+      ];
+      // Vertical Win
+      const boardWinVertical = [
+        [null, "O", "X"],
+        ["X", "O", null],
+        [null, "O", "X"],
+      ];
+      // Backslash Win
+      const boardWinBackslash = [
+        ["O", null, "X"],
+        ["X", "O", null],
+        ["O", "X", "O"],
+      ];
+      // Slash Win
+      const boardWinSlash = [
+        [null, "X", "O"],
+        ["X", "O", null],
+        ["O", "X", "O"],
+      ];
+      // 4x4 Backslash Win
+      const boardWinBackslashSize4 = [
+        ["O", null, "X", null],
+        ["X", "O", null, "0"],
+        ["O", "X", "O", "X"],
+        ["O", "X", "X", "O"],
+      ];
+
+      console.log("Espect Draw:", getWinner(boardDraw));
+      console.log("Espect X:", getWinner(boardXWins));
+      console.log("Espect O:", getWinner(boardOWins));
+      console.log("Espect null:", getWinner(boardNoWinner));
+      console.log("Espect X:", getWinner(boardWinHorizontal));
+      console.log("Espect O:", getWinner(boardWinVertical));
+      console.log("Espect O:", getWinner(boardWinBackslash));
+      console.log("Espect O:", getWinner(boardWinSlash));
+      console.log("Espect O:", getWinner(boardWinBackslashSize4));
+
+      // Random board generator
+      //--------------------------
+      function randomBoardGenerator(size = 10) {
+        const strokeFrequency = ["X", "X", "X", "X", "O", "O", "O", "O", null];
+
+        const board = new Array(size)
+          .fill(null)
+          .map(() => new Array(size).fill(null));
+
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            board[i][j] = Math.round(
+              Math.random() * (strokeFrequency.length - 1 - 0) + 0
+            );
+          }
+        }
+        return board;
+      }
+
+      const board = randomBoardGenerator(3);
+
+      console.log(board.map((item) => item.join(",")).join("\n"));
+      console.log(getWinner(board), board);
+    </script>
+  </body>
+</html>
