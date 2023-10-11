@@ -67,6 +67,36 @@
         ["O", "X", "O", "X"],
         ["O", "X", "X", "O"],
       ];
+      // Multiple Win
+      const boardMultipleWin = [
+        ["X", "X", "X"],
+        [null, null, null],
+        ["O", "O", "O"],
+      ];
+      // Multiple Win Twice
+      const boardWinTwice = [
+        ["X", "X", "X"],
+        ["O", "O", "O"],
+        ["O", "O", "O"],
+      ];
+      // Multiple Win Twice
+      const boardWinTwice2 = [
+        ["O", "X", "X"],
+        ["O", "X", "X"],
+        ["O", "X", "X"],
+      ];
+      // Multiple Win Twice
+      const boardWinTwice3 = [
+        ["X", "O", "X"],
+        ["X", "O", "X"],
+        ["X", "O", "X"],
+      ];
+      // Multiple Win Twice
+      const boardWinTwice4 = [
+        ["O", "O", "O"],
+        ["X", "X", "O"],
+        ["O", "X", "O"],
+      ];
 
       console.log("Espect Draw:", getWinner(boardDraw));
       console.log("Espect X:", getWinner(boardXWins));
@@ -77,9 +107,15 @@
       console.log("Espect O:", getWinner(boardWinBackslash));
       console.log("Espect O:", getWinner(boardWinSlash));
       console.log("Espect O:", getWinner(boardWinBackslashSize4));
+      console.log("Espect Draw:", getWinner(boardMultipleWin));
+      console.log("Espect O:", getWinner(boardWinTwice));
+      console.log("Espect X:", getWinner(boardWinTwice2));
+      console.log("Espect X:", getWinner(boardWinTwice3));
+      console.log("Espect O:", getWinner(boardWinTwice4));
 
       // Random board generator
       //--------------------------
+
       function randomBoardGenerator(size = 10) {
         const strokeFrequency = ["X", "X", "X", "X", "O", "O", "O", "O", null];
 
@@ -89,9 +125,10 @@
 
         for (let i = 0; i < size; i++) {
           for (let j = 0; j < size; j++) {
-            board[i][j] = Math.round(
-              Math.random() * (strokeFrequency.length - 1 - 0) + 0
-            );
+            board[i][j] =
+              strokeFrequency[
+                Math.round(Math.random() * (strokeFrequency.length - 1 - 0) + 0)
+              ];
           }
         }
         return board;
