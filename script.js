@@ -1,108 +1,69 @@
 "use strict";
 
-// Returns the Winner mark (if there is one) in the form of "X", "O"
-// An ongoing game = 1
-// A draw = 0
-function checkLine(board, start, increments) {
-  const firstMark = board[start.row][start.col]; // Starting point of the line
-  let isWinning = true; // A flag to check if the line is winning or not
-
-  // Loop as the board length, but not nessessarily following the array order
-  for (let i = 0; i < board.length; i++) {
-    const row = start.row + increments.row * i;
-    const col = start.col + increments.col * i;
-    const currentMark = board[row][col];
-
-    if (currentMark === null) {
-      return 1; // If there is a null mark, then the game is not finished yet but there is maybe a winner anyway
-    }
-
-    if (currentMark !== firstMark) {
-      isWinning = false;
-      break;
-    }
-  }
-
-  // At the end of the loop, if isWinning is still true, then we have a winner or otherwise it's a draw
-  return isWinning ? firstMark : 0;
-}
-
-// Return the result as a human readable string
-function returnResult(result) {
-  switch (result) {
-    case "draw":
-      return `It's a draw`;
-    case "notFinished":
-      return "The game is not finish yet";
-    default:
-      return `Winner is ${result}`;
-  }
-}
-
-// A function that takes a Tic Tac Toe board as a multi-dimensional array and returns the result.
-// The board must be filled following:
-//    players are "X" and "O"
-//    empty cells are represented by null
+// Board is a square multiple array. Entries are either "X", "O", or null
 function getWinner(board) {
-  // Check all lines in every direction
-  const perpendicular = new Array();
-  const diagonal = [
-    checkLine(board, { row: 0, col: 0 }, { row: 1, col: 1 }), // Check backslash lines
-    checkLine(board, { row: 0, col: 2 }, { row: 1, col: -1 }), // Check slash lines
+  let inProgress = false;
+  let winner = [];
+
+  // Winning scenarios
+  const horizontal = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
   ];
+  const vertical = [
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+  ];
+  const diagonal = [
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  const scenarios = [...horizontal, ...vertical, ...diagonal];
 
-  for (let i = 0; i < board.length; i++) {
-    perpendicular.push(
-      checkLine(board, { row: i, col: 0 }, { row: 0, col: 1 }), // Check horizontal lines
-      checkLine(board, { row: 0, col: i }, { row: 1, col: 0 }) // Check vertical lines
-    );
+  // flatten the board
+  const flatBoard = board.reduce((acc, val) => acc.concat(val), []);
+
+  // Check for winning scenarios
+  scenarios.forEach((scenario) => {
+    // Build a list of the entries in the board that match the scenario
+    const entries = scenario.map((index) => flatBoard[index]);
+
+    // Check if all entries are the same by removing duplicates
+    const uniqueEntries = [...new Set(entries)];
+
+    // If there is a null entry, the game is still in progress
+    if (uniqueEntries.includes(null)) {
+      inProgress = true; // still in progress
+      return;
+    }
+
+    // If there is only one entry and it is not null, we have a winner
+    if (uniqueEntries.length === 1) {
+      winner.push(uniqueEntries[0]);
+      return;
+    }
+  });
+  // In progress if there is no winner and there are still null entries
+  if (inProgress && !winner.length) {
+    return "Game in progress";
   }
-
-  // Merge the two arrays,
-  // remove duplicates,
-  // and sort them to facilitate the next steps, in the following order:
-  // "X", "O", null, "Draw"
-  const allLinesResults = [...diagonal, ...perpendicular];
-  const result = [...new Set(allLinesResults)].sort().reverse();
-
-  // Analyze the result and return the appropriate message
-  // ----------------------------
-
-  // Early return when Draw or not finished
-  if (typeof result[0] !== "string") {
-    return returnResult(["draw", "notFinished"][result[0]]);
+  // It's a Draw if the total of win is even, AND not all by the same player
+  if (winner.length % 2 === 0 && [...new Set(winner)].length !== 1) {
+    return "Draw";
   }
-
-  // Extract all winners
-  const winners = allLinesResults.filter((item) => typeof item === "string");
-
-  // If there is only one winner, return it
-  if (winners.length === 1) {
-    return returnResult(result[0]);
+  // Only one Winner
+  if (winner.length === 1) {
+    return `Winner is ${winner[0]}`;
   }
+  // Edge case: multiple winners. Count the biggest score to find the greatest winner
+  const greatWinner = winner
+    .reduce((acc, player) => {
+      const count = winner.filter((p) => p === player).length;
+      return [...acc, { player, count }];
+    }, [])
+    .sort((a, b) => b.count - a.count)[0];
 
-  // Following code is to handle the edge case of multiple winners
-  // ----------------------------
-
-  // If there is multiple winners, return the one with the most wins
-  const victoryCount = winners.reduce(
-    (acc, cur) => ({ ...acc, [cur]: (acc[cur] || 0) + 1 }),
-    {}
-  );
-  const victories = Object.values(victoryCount);
-
-  // Same number of wins for both players means a draw
-  if (
-    victories.length > 1 &&
-    victories.every((item) => item === victories[0])
-  ) {
-    return returnResult("draw");
-  }
-
-  // Finally, return the winner with the most wins
-  const maxVictoryCount = Math.max(...victories);
-  const winner = Object.entries(victoryCount).filter(
-    (item) => item[1] === maxVictoryCount
-  )[0][0];
-  return returnResult(winner);
+  return `Winner is ${greatWinner.player} (x${greatWinner.count} wins)`;
 }
