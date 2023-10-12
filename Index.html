@@ -9,42 +9,82 @@
   <body>
     <div id="wrapper"></div>
     <script type="text/javascript">
-      // Test cases
+      // Test all cases
       //--------------------------
-      const boardHorizontal = [
+
+      // Draw match
+      const boardDraw = [
+        ["X", "O", "X"],
+        ["O", "X", "O"],
+        ["O", "X", "O"],
+      ];
+      // X wins
+      const boardXWins = [
+        ["X", "O", "X"],
+        ["O", "X", "O"],
+        ["O", "X", "X"],
+      ];
+      // O wins
+      const boardOWins = [
         ["X", "O", "X"],
         ["O", "O", "O"],
-        ["O", "X", "O"],
+        ["O", "X", "X"],
       ];
-      const boardVertical = [
-        ["O", "X", "O"],
-        ["O", "X", "O"],
+      // No winner
+      const boardNoWinner = [
+        ["X", "O", null],
+        [null, "X", "O"],
+        [null, null, "O"],
+      ];
+      // Horizontal Win
+      const boardWinHorizontal = [
         ["O", "O", "X"],
+        ["X", "O", null],
+        ["X", "X", "X"],
       ];
-      const boardBackslash = [
-        ["X", "X", "O"],
-        ["X", "X", "O"],
-        ["O", "O", "X"],
+      // Vertical Win
+      const boardWinVertical = [
+        [null, "O", "X"],
+        ["X", "O", null],
+        [null, "O", "X"],
       ];
-      const boardSlash = [
-        ["X", "X", "O"],
-        ["X", "O", "O"],
-        ["O", "O", "X"],
-      ];
-      const boardWinningDraw = [
+      // Backslash Win
+      const boardWinBackslash = [
+        ["O", null, "X"],
+        ["X", "O", null],
         ["O", "X", "O"],
-        ["O", "X", "X"],
-        ["O", "X", "X"],
       ];
-      const boardMultiWinning = [
-        ["O", "X", "X"],
-        ["O", "X", "X"],
-        ["O", "X", "X"],
+      // Slash Win
+      const boardWinSlash = [
+        [null, "X", "O"],
+        ["X", "O", null],
+        ["O", "X", "O"],
       ];
+      // Draw Win
+      const boardWinDraw = [
+        ["X", "X", "X"],
+        [null, null, null],
+        ["O", "O", "O"],
+      ];
+      // Multiple Win
+      const boardMultipleWin = [
+        ["X", "X", "X"],
+        ["O", "O", "O"],
+        ["O", "O", "O"],
+      ];
+      // 4x4 Backslash Win
+      const boardWinBackslashSize4 = [
+        ["O", null, "X", null],
+        ["X", "O", null, "0"],
+        ["O", "X", "O", "X"],
+        ["O", "X", "X", "O"],
+      ];
+      // Smaller
       const boardSmaller = [
         ["O", "X"],
         ["X", "X"],
       ];
+      // Bigger
       const boardBigger = [
         ["O", "X", "O", "X", "X", "O"],
         ["O", "X", "X", "X", "O", "X"],
@@ -54,7 +94,43 @@
         ["O", "X", "X", "X", "X", "X"],
       ];
 
-      console.log(getWinner(boardMultiWinning));
+      console.log("Espected Draw:", getWinner(boardDraw));
+      console.log("Espected X:", getWinner(boardXWins));
+      console.log("Espected O:", getWinner(boardOWins));
+      console.log("Espected null:", getWinner(boardNoWinner));
+      console.log("Espected X:", getWinner(boardWinHorizontal));
+      console.log("Espected O:", getWinner(boardWinVertical));
+      console.log("Espected O:", getWinner(boardWinBackslash));
+      console.log("Espected O:", getWinner(boardWinSlash));
+      console.log("Espected O:", getWinner(boardWinBackslashSize4));
+      console.log("Espected X3:", getWinner(boardSmaller));
+      console.log("Espected Draw:", getWinner(boardWinDraw));
+      console.log("Espected O2:", getWinner(boardMultipleWin));
+      console.log("Espected O:", getWinner(boardBigger));
+
+      // Random board generator
+      //--------------------------
+      function randomBoardGenerator(size = 10) {
+        const strokeFrequency = ["X", "X", "X", "X", "O", "O", "O", "O", null];
+
+        const board = new Array(size)
+          .fill(null)
+          .map(() => new Array(size).fill(null));
+
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            board[i][j] = Math.round(
+              Math.random() * (strokeFrequency.length - 1 - 0) + 0
+            );
+          }
+        }
+        return board;
+      }
+
+      const board = randomBoardGenerator(3);
+
+      console.log(board.map((item) => item.join(",")).join("\n"));
+      console.log(getWinner(board), board);
     </script>
   </body>
 </html>
