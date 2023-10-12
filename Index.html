@@ -12,9 +12,9 @@
       // Test cases
       //--------------------------
       const boardHorizontal = [
+        ["X", "O", "X"],
         ["O", "O", "O"],
         ["O", "X", "O"],
-        ["X", "O", "X"],
       ];
       const boardVertical = [
         ["O", "X", "O"],
@@ -22,8 +22,13 @@
         ["O", "O", "X"],
       ];
       const boardBackslash = [
-        ["O", "X", "X"],
         ["X", "X", "O"],
+        ["X", "X", "O"],
+        ["O", "O", "X"],
+      ];
+      const boardSlash = [
+        ["X", "X", "O"],
+        ["X", "O", "O"],
         ["O", "O", "X"],
       ];
       const boardWinningDraw = [
@@ -35,6 +40,18 @@
         ["O", "X", "X"],
         ["O", "X", "X"],
         ["O", "X", "X"],
+      ];
+      const boardSmaller = [
+        ["O", "X"],
+        ["X", "X"],
+      ];
+      const boardBigger = [
+        ["O", "X", "O", "X", "X", "O"],
+        ["O", "X", "X", "X", "O", "X"],
+        ["O", "X", "O", "O", "X", "X"],
+        ["O", "O", "O", "X", "O", "X"],
+        ["X", "O", "X", "X", "X", "X"],
+        ["O", "X", "X", "X", "X", "X"],
       ];
 
       console.log(getWinner(boardMultiWinning));

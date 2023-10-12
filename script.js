@@ -6,20 +6,18 @@ function getWinner(board) {
   let winner = [];
 
   // Winning scenarios
-  const horizontal = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-  ];
-  const vertical = [
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-  ];
+  const horizontal = [...board].map((row, r) =>
+    row.map((_, c) => c + r * row.length)
+  );
+  const vertical = [...board].map((row, r) =>
+    row.map((_, c) => r + c * row.length)
+  );
+  const line = new Array(board.length).fill(0);
   const diagonal = [
-    [0, 4, 8],
-    [2, 4, 6],
+    line.map((_, i) => i * board.length + i),
+    line.map((_, i) => board.length - 1 + i * (board.length - 1)),
   ];
+
   const scenarios = [...horizontal, ...vertical, ...diagonal];
 
   // flatten the board
